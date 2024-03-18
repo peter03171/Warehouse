@@ -1,0 +1,27 @@
+﻿@model User
+<style>
+    .full-height {
+        min-height: 100vh; /* 使用视口高度确保父容器填满整个屏幕 */
+     /*    display: flex; */
+        align-items: center; /* 垂直居中 */
+        justify-content: center; /* 水平居中 */
+    }
+</style>
+
+<div class="container mt-5">
+    
+    <div class="full-height">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header text-center">
+                    <h2 class="m-0">用戶訊息</h2>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">名稱: @Model.UserName</h5>
+                    <p class="card-text">權限: @Model.Role</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</div>

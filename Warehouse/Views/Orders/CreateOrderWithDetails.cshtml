@@ -1,0 +1,126 @@
+﻿@model Warehouse.ViewModels.OrderWithDetailsViewModel
+
+
+<form asp-action="CreateOrderWithDetails" method="post" id="app">
+    <h2>Order</h2>
+    <!-- 绑定 Order 属性 -->
+    <div>
+        <label Asp-for="Order.CustomerID"></label>
+        @*  手動帶入,後續調整為自動帶入customer list *@
+        <select asp-for="Order.CustomerID" class="form-control" />
+        @* <option value="">Please select a customer</option> *@
+        <option value="1">Acme Corporation</option>
+        <option value="2">Terra Firma</option>
+        </select>
+    </div>
+    <div>
+        <label for="OrderDate">Order Date</label>
+        <input asp-for="Order.OrderDate" type="date" required min="1753-01-01" />
+    </div>
+    <div>
+        <label for="ShippedDate">Shipped Date</label>
+        <input asp-for="Order.ShippedDate" type="date" min="1753-01-01" />
+    </div>
+    <div>
+        <label for="Status">Status</label>
+        <select asp-for="Order.Status" class="form-control">
+            @*  <option value="">Please select a status</option> *@
+            <option value="Pending">Pending</option>
+            <option value="Processing">Processing</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+        </select>
+    </div>
+    <h2>Products</h2>
+    <div >
+        <!-- 產品新增列表 -->
+        <div v-for="(detail, index) in orderDetails" :key="index" class="product-detail" >
+        <label>Product ID:</label>
+            <select type="number" v-on:change="updatePrice(detail, index)" v-model="detail.ProductID" :name="'OrderDetails[' + index + '].ProductID'">
+                @foreach (var product in Model.Products)
+                {
+                    <option :value="@product.ProductId">@product.ProductName </option>
+                }
+            </select>
+            
+        <label>Quantity:</label>
+            <input type="number" v-model="detail.Quantity" required min="1":name="'OrderDetails[' + index + '].Quantity'" /> 
+
+        <label>UnitPrice:</label>
+            <input type="hidden" v-model="detail.UnitPrice" readonly :name="'OrderDetails[' + index + '].UnitPrice'" />
+            @* 用label + span 呈顯,取代input 輸入框 *@
+            <span>{{ detail.UnitPrice }}</span>
+
+            <input type="button" v-on:click="removeDetails(detail)" value="remove"></input>
+      </div>
+    
+    <div>
+        <input type="button" v-on:click="addDetails" value="新增產品列表"></input>
+    </div>
+    <div>
+        <input type="submit" value="新增訂單" ></input>
+    </div>
+    </div>
+</form>
+
+<script>
+    var dataModel={
+        orderDetails: [
+        {
+            ProductID: '',
+            Quantity: '',
+            UnitPrice: ''
+        }],
+        OrderDate: '',
+        ShippedDate: '',
+        //products:[]
+        products: @Html.Raw(Json.Serialize(Model.Products))
+    }
+
+    var functions = {
+        addDetails: function () {
+            this.orderDetails.push({ ProductID: '', Quantity: '', UnitPrice: '' });
+        },
+        removeDetails: function (index) {
+            console.log(index);
+            this.orderDetails.splice(index, 1);
+        },
+        updatePrice: function (detail, index) {
+            console.log("Updating price for:", detail, "at index:", index);
+            console.log("Available products:", this.products);
+
+            
+            let productId = Number(detail.ProductID);
+            console.log("Converted Product ID:", productId);
+            let selectedProduct = this.products.find(p => p.productId == productId);
+            console.log("Selected product:", selectedProduct);
+
+            if (selectedProduct) {
+                
+                detail.UnitPrice = selectedProduct.unitPrice;
+                this.orderDetails.splice(index, 1, detail);
+            } else {
+                console.error("Product not found for ID:", detail.ProductID);
+            }
+        }
+    }
+    // var watcher={
+    //     OrderDate: function (newVal) {
+    //         if (this.ShippedDate < newVal) { 
+    //             this.ShippedDate = newVal;
+    //         }
+    //     }
+    // }
+
+    
+
+   
+
+    var app = new Vue(
+        {
+            data:dataModel,
+            methods: functions
+        }
+    );
+    app.$mount('#app');
+</script>

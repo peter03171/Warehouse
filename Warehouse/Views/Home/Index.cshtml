@@ -1,0 +1,39 @@
+﻿@{
+    ViewData["Title"] = "Warehouse 首頁";
+}
+
+<div class="container-fluid p-0">
+    <!-- 使用 container-fluid 移除 padding -->
+    <div class="jumbotron bg-dark text-white m-0 d-flex flex-column justify-content-center no-margin" style="min-height: 100vh">
+        
+        <div class="text-center">
+           
+            <h1 class="display-4">歡迎來到 Warehouse 管理系統</h1>
+            <p class="lead">您的一站式倉儲和物流管理解決方案。</p>
+            <hr class="my-4">
+            <p>Warehouse管理系統提供全面的庫存管理、訂單處理和物流跟踪功能，幫助您提升倉儲效率，降低運營成本。</p>
+            <p>我們的系統都能提供靈活、可擴展的解決方案，滿足您不斷變化的業務需求。</p>
+            <a class="btn btn-primary btn-lg" href="#" role="button">了解更多</a>
+        </div>
+        <div id="moreInfo" class="container my-5" style="display: none;">
+            <h2>更多 Warehouse 管理系统的訊息</h2>
+            <p>Warehouse 管理系统不僅提供強大的庫存管理，還包括以下特色：</p>
+            <ul>
+                <li>即時更新庫存，確保數據的準確性。</li>
+                <li>訂單自動處理，提高處理效率，減少人為疏失。</li>
+                <li>全面物流跟蹤，從發貨到交付的每一步都清晰可見。</li>
+                <li>數據分析及報告，幫助您做出更好的決策。</li>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    $(document).ready(function () {
+        $(".btn-primary").click(function (event) {
+            event.preventDefault(); // 防止畫面跳轉
+            $("#moreInfo").slideToggle("slow"); // 使用slideToggle顯示or隱藏訊息
+        });
+    });
+</script>

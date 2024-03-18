@@ -1,0 +1,37 @@
+﻿@model Warehouse.ViewModels.OrderEditViewModel
+
+<h2>Edit Order</h2>
+
+<form asp-action="Edit">
+    <input type="hidden" asp-for="OrderID" />
+
+    <div class="form-group">
+        <label asp-for="OrderDate"></label>
+        <input asp-for="OrderDate" class="form-control" type="date" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ShippedDate"></label>
+        <input asp-for="ShippedDate" class="form-control" type="date" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="CustomerID"></label>
+        <select asp-for="CustomerID" asp-items="Model.Customers" class="form-control"></select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Status"></label>
+        <select asp-for="Status" class="form-control">
+            @*  <option value="">Please select a status</option> *@
+            <option value="Pending">Pending</option>
+            <option value="Processing">Processing</option>
+            <option value="Completed">Completed</option>
+            <option value="Cancelled">Cancelled</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-primary">Back to List</a>
+
+</form>

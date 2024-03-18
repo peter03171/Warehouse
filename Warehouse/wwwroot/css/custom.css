@@ -1,0 +1,32 @@
+﻿.nav-right{
+    margin-left:auto
+}
+
+.sidebar-sticky {
+    position: fixed;
+    top: 56px; /* 調整頂部sidebar  */
+    height: calc(100vh - 56px); /* 調整可視高度 */
+    overflow-y: auto; /* 允許滾動 */
+}
+
+
+.no-padding {
+    padding: 0 ;
+}
+
+.no-margin {
+    margin: 0 ;
+}
+
+.full-height {
+    min-height: 100vh; /* 保持高度一致 */
+}
+
+.sidebar-links .nav-link {
+    color: #fff !important; /* 白色字體 */
+}
+
+.sidebar-links .nav-link:hover {
+    color: #ccc !important; /* 游標移至變更顏色 */
+}
+
