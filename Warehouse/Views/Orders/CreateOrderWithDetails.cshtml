@@ -4,6 +4,7 @@
 <form asp-action="CreateOrderWithDetails" method="post" id="app">
     <h2>Order</h2>
     <!-- 绑定 Order 属性 -->
+    <div class="container mt-5">
     <div>
         <label Asp-for="Order.CustomerID"></label>
         @*  手動帶入,後續調整為自動帶入customer list *@
@@ -61,6 +62,7 @@
         <input type="submit" value="新增訂單" ></input>
     </div>
     </div>
+       </div>
 </form>
 
 <script>

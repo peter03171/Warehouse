@@ -2,14 +2,26 @@
 @{
     ViewData["Title"] = "Index";
 }
+<style>
 
+    .completed-order td {
+        text-decoration: line-through;
+        color: #6c757d; /* 灰色文字，表示已完成 */
+    }
+
+    .no-line-through, .no-line-through * {
+        text-decoration: none !important; /* 使用 !important 覆蓋 */
+    }
+
+</style>
 
 <div class="container mt-3">
     <h1>Order Index</h1>
     <p>
         <a asp-action="CreateOrderWithDetails" class="btn btn-success">Create New</a>
     </p>
-    <table class="table table-striped table-hover ">
+
+    <table class="table table-striped table-hover">
         <thead>
             <tr>
                 <th>
@@ -30,12 +42,22 @@
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
-                    <td>@Html.DisplayFor(modelItem => item.OrderID)</td>
+                @* 如果為completed 則套用completed-order css *@
+                <tr class="@(item.Status == "Completed" ? "completed-order" : "")">
+                    <td >@Html.DisplayFor(modelItem => item.OrderID)</td>
                     <td>@Html.DisplayFor(modelItem => item.OrderDate)</td>
-                    <td>@Html.DisplayFor(modelItem => item.ShippedDate)</td>
-                    <td>@Html.DisplayFor(modelItem => item.Status)</td>
                     <td>
+                        @if (item.ShippedDate.HasValue && item.ShippedDate < DateTime.Now)
+                        {
+                            <span class="text-danger">@Html.DisplayFor(modelItem => item.ShippedDate) (Overdue)</span>
+                        }
+                        else
+                        {
+                            @Html.DisplayFor(modelItem => item.ShippedDate)
+                        }
+                    </td>
+                    <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                    <td class="no-line-through">
                         <a asp-action="Edit" asp-route-id="@item.OrderID" class="btn btn-primary btn-sm">Edit</a>
                         <a asp-action="Details" asp-route-id="@item.OrderID" class="btn btn-info btn-sm">Details</a>
                         <a asp-action="Delete" asp-route-id="@item.OrderID" class="btn btn-danger btn-sm">Delete</a>

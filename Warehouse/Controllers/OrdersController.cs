@@ -160,17 +160,7 @@ namespace Warehouse.Controllers
             }
             try
             {
-                // 檢查和設置預設日期
-                //if (model.Order.OrderDate == DateTime.MinValue)
-                //{
-                //    model.Order.OrderDate = DateTime.Today;
-                //}
-                //if (model.Order.ShippedDate == DateTime.MinValue)
-                //{
-                //    model.Order.ShippedDate = DateTime.Today;
-                //}
-
-                // 添加 Order
+                
                 _context.Orders.Add(model.Order);
                 await _context.SaveChangesAsync();
 
@@ -383,6 +373,85 @@ namespace Warehouse.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        #endregion
+
+        #region OrderReport
+
+        //public async Task<IEnumerable<OrderReportViewModel>> GenerateOrderReportAsync(DateTime startDate, DateTime endDate)
+        //{
+        //    var orders = await _context.Orders
+        //        .Where(o => o.OrderDate >= startDate && o.OrderDate <= endDate)
+        //        .ToListAsync();
+
+        //    var orderReportViewModels = new List<OrderReportViewModel>();
+
+        //    foreach (var order in orders)
+        //    {
+        //        var customerName = await _context.Customers
+        //            .Where(c => c.CustomerID == order.CustomerID) 
+
+        //            .FirstOrDefaultAsync();
+
+        //        orderReportViewModels.Add(new OrderReportViewModel
+        //        {
+        //            OrderID = order.OrderID,
+        //            CustomerName = customerName,
+        //            OrderDate = order.OrderDate
+
+        //        });
+        //    }
+
+        //    return orderReportViewModels;
+        //}
+
+
+        #endregion
+
+        #region OrderSearch
+
+       public async Task<IEnumerable<OrderReportViewModel>> SearchOrders(OrderSearchViewModel searchModel)
+        {
+            // order 連接 customer
+            var query = from o in _context.Orders
+                        join c in _context.Customers on o.CustomerID equals c.CustomerID
+                        select new { Order = o, Customer = c };
+
+            // 搜尋條件
+            if (searchModel.StartDate.HasValue)
+            {
+                query = query.Where(x => x.Order.OrderDate >= searchModel.StartDate.Value);
+            }
+    
+            if (searchModel.EndDate.HasValue)
+            {
+                query = query.Where(x => x.Order.OrderDate <= searchModel.EndDate.Value);
+            }
+    
+            if (!string.IsNullOrEmpty(searchModel.Status))
+            {
+                query = query.Where(x => x.Order.Status == searchModel.Status);
+            }
+
+            if (!string.IsNullOrEmpty(searchModel.CustomerName))
+            {
+                query = query.Where(x => x.Customer.CompanyName.Contains(searchModel.CustomerName));
+            }
+
+            
+
+            // 連接字串
+            var result = await query.Select(x => new OrderReportViewModel
+            {
+                OrderID = x.Order.OrderID,
+                CustomerName = x.Customer.CompanyName,
+                OrderDate = x.Order.OrderDate,
+               
+            }).ToListAsync();
+
+            return result;
+        }
+
 
         #endregion
 
